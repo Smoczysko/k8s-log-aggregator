@@ -1,0 +1,31 @@
+{
+  "name": "@smoczysko/k8s-log-aggregator",
+  "version": "1.0.0",
+  "description": "CLI tool for aggregating logs from multiple Kubernetes pods.",
+  "main": "index.js",
+  "bin": {
+    "logaggregator": "./bin/index.js"
+  },
+  "preferGlobal": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Smoczysko/k8s-log-aggregator.git"
+  },
+  "keywords": [
+    "Kubernetes",
+    "k8s",
+    "logs",
+    "devops"
+  ],
+  "author": "Łukasz Rybka",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Smoczysko/k8s-log-aggregator/issues"
+  },
+  "homepage": "https://github.com/Smoczysko/k8s-log-aggregator#readme",
+  "dependencies": {
+    "ansi-styles": "^4.2.1",
+    "chalk": "^3.0.0",
+    "commander": "^5.0.0"
+  }
+}
