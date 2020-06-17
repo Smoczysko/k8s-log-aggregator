@@ -16,3 +16,9 @@ To view logs live logs across different pods that share same name prefix and exa
 ```bash
 npx @smoczysko/k8s-log-aggregator watch <POD_PREFIX> <CONTAINER_NAME>
 ```
+
+In order to download all logs across different pods to one file enter following command:
+
+```bash
+npx @smoczysko/k8s-log-aggregator download <POD_PREFIX> <CONTAINER_NAME> <FILE_NAME>
+```
