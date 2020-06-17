@@ -1,30 +1,14 @@
-const nodeUtils = require('util');
 const childProcess = require('child_process');
 const chalk = require('chalk');
 const chalkUtils = require('../utils/chalk.utils');
-
-const exec = nodeUtils.promisify(childProcess.exec);
+const kubernetesUtils = require('../utils/k8s.utils');
 
 module.exports = async (prefix, container) => {
-    const { stdout } = await exec(`kubectl get po`, {
-        env: process.env,
-        shell: '/bin/bash'
-    });
-
-    const pods = stdout.split('\n')
-        .slice(1)
-        .map(line => {
-            const parts = line.split(/[ ,]+/);
-
-            return !parts ? undefined : parts[0];
-        })
-        .filter(line => line.startsWith(prefix))
-        .map(pod => pod.substring(prefix.length));
-
+    const pods = await kubernetesUtils.getPods(prefix);
     const podStyles = chalkUtils.setColors(pods);
 
     pods.forEach((pod, index) => {
-        const logs = childProcess.spawn(`kubectl`, ['logs', '-f', `${prefix}${pods[0]}`, '-c', container]);
+        const logs = childProcess.spawn(`kubectl`, ['logs', '-f', `${prefix}${pods[index]}`, '-c', container]);
 
         logs.stdout.on('data', data => {
             console.log(chalk[podStyles[index]](`[${pods[0]}] ${data}`));
@@ -32,7 +16,8 @@ module.exports = async (prefix, container) => {
 
         logs.on('exit', code => {
             if (code !== 0) {
-                console.log('Something went wrong...');
+                console.log(`Something went wrong while watching on ${prefix}${pod} container logs Exit status: ${code}`);
+
                 process.exit(code);
             } else {
                 console.log('Bye bye');
@@ -40,7 +25,7 @@ module.exports = async (prefix, container) => {
         });
 
         logs.on('error', error => {
-            console.log('WTF?!');
+            console.log(`Error occurred while watching on ${prefix}${pod} container logs`);
             console.log(error);
         })
     });

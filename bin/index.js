@@ -5,6 +5,7 @@ const chalk = require('chalk');
 const path = require('path');
 
 const watchCommand = require('./commands/watch');
+const downloadCommand = require('./commands/download');
 
 const pkg = require(path.join(__dirname, '../package.json'));
 
@@ -32,7 +33,14 @@ const pkg = require(path.join(__dirname, '../package.json'));
         .arguments('<prefix> <container>')
         .action(watchCommand);
 
-    await program.parseAsync(process.argv);
+    program
+        .command('download')
+        .alias('d')
+        .description('Allows to download logs from multiple pods (that share name prefix) with same container within')
+        .arguments('<prefix> <container> <file>')
+        .action(downloadCommand);
+
+    await program.parseAsync();
 })();
 
 
